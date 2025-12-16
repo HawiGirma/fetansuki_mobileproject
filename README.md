@@ -1,7 +1,9 @@
 # FetanSuki — Smart POS & Micro-Credit Shop Management
+
 FetanSuki is a lightweight, offline-first Point-of-Sale and micro-credit management system built for small shops. It helps shop owners record sales, issue digital receipts, track customer credit, manage inventory, and analyze sales — with simple mobile and web interfaces and a Supabase backend.
 
 ## 🔑 Key Features
+
 - Fast POS / New Sale workflow with cart & quick product search
 - Digital receipt generation, print & share (SMS/WhatsApp/Email)
 - Micro-credit recording, installment tracking, due-date reminders
@@ -13,6 +15,7 @@ FetanSuki is a lightweight, offline-first Point-of-Sale and micro-credit managem
 - Localization: Amharic & English
 
 ## 📁 Repository Structure
+
 ```
 FetanSuki/
 │
@@ -46,6 +49,7 @@ FetanSuki/
 ```
 
 ## 🛠️ Tech Stack (recommended)
+
 - Mobile app: Flutter (Android-first), Dart
 - Backend: Supabase (Postgres + Auth + Storage + Realtime)
 - Edge functions / serverless: TypeScript (optional)
@@ -54,7 +58,9 @@ FetanSuki/
 - CI/CD: GitHub Actions (optional)
 
 ## 🗄️ Database Schema (summary)
+
 Tables included (see backend/sql/schema.sql for SQL):
+
 - users — id, full_name, phone, email, password_hash, role
 - shops — id, owner_id, name, address, created_at
 - products — id, shop_id, name, category, unit_price, stock_qty, image_url
@@ -65,7 +71,9 @@ Tables included (see backend/sql/schema.sql for SQL):
 - notifications — id, user_id, message, type, is_read, created_at
 
 ## ⚙️ Environment & Configuration
+
 Create a .env for local dev (or set via Supabase/E2E environment):
+
 ```
 
 # Supabase
@@ -75,8 +83,6 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key   # server use only
 
 # Payment Gateways (optional)
 CHAPA_SECRET_KEY=your-chapa-key
-TELEBIRR_CLIENT_ID=your-telebirr-id
-TELEBIRR_SECRET=your-telebirr-secret
 
 # App config
 APP_ENV=development
@@ -85,22 +91,26 @@ Important: Never commit secret keys. Use GitHub Secrets for CI/CD.
 ```
 
 ## 🔒 Security & Privacy
+
 - Use Supabase Auth with phone verification for primary login.
 - Encrypt sensitive data in transit (HTTPS) and rely on Supabase DB encryption at rest.
 - Use Row Level Security (RLS) policies to restrict access by user_id / shop_id.
 - Protect service keys; use server-side edge functions for operations that require the service role key.
 
 ## 📦 Packaging & Deployment
+
 - Mobile: build release APK / App Bundle for Android; TestFlight/App Store for iOS (if required).
 - Backend: Supabase hosted (managed) — deploy SQL and edge functions via CLI or dashboard.
 - CI/CD: Add GitHub Actions to run tests and deploy edge functions on main.
 
 ## 🧪 Testing
+
 - Flutter widget tests for screens and widget logic.
 - Integration tests for sale creation and credit flows (use a test Supabase project).
 - Mock payments in dev environment.
 
 ## 🤝 Contributing
+
 - Fork the repo.
 - Create a branch: feature/your-feature.
 - Implement & add tests.
@@ -109,6 +119,7 @@ Important: Never commit secret keys. Use GitHub Secrets for CI/CD.
 - Include CONTRIBUTING.md with code standards and review checklist.
 
 ## 📝 Documentation
+
 Keep detailed docs under docs/:
 
 docs/SRS/ — requirements (we already have SRS)
@@ -121,6 +132,6 @@ docs/api/ — OpenAPI spec & sample requests/responses
 
 docs/ux/ — wireframes & navigation flows
 
-
 ## 📞 Contact / Support
+
 Email: hawigirmamegersag@gmail.com
