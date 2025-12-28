@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "673438020148",
+    "project_id": "fetansuki",
+    "storage_bucket": "fetansuki.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673438020148:android:58f81d3583558cc57e1061",
+        "android_client_info": {
+          "package_name": "com.example.fetansuki_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUZN52knd4eAeQBbHR0mh3DYy9UhahMC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
