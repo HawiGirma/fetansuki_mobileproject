@@ -3,6 +3,7 @@ import 'package:fetansuki_app/features/auth/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> login(String email, String password);
+  Future<UserModel> register(String name, String email, String password);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -16,6 +17,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.post(
       '/auth/login',
       data: {'email': email, 'password': password},
+    );
+    return UserModel.fromJson(response);
+  }
+
+  @override
+  Future<UserModel> register(String name, String email, String password) async {
+    // Example API call
+    final response = await apiClient.post(
+      '/auth/register',
+      data: {'name': name, 'email': email, 'password': password},
     );
     return UserModel.fromJson(response);
   }

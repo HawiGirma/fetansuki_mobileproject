@@ -6,6 +6,7 @@ import 'package:fetansuki_app/features/auth/data/repositories/auth_repository_im
 import 'package:fetansuki_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:fetansuki_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:fetansuki_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:fetansuki_app/features/auth/presentation/providers/auth_state.dart';
 
@@ -30,6 +31,10 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 // Use Cases
 final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
   return LoginUseCase(ref.watch(authRepositoryProvider));
+});
+
+final registerUseCaseProvider = Provider<RegisterUseCase>((ref) {
+  return RegisterUseCase(ref.watch(authRepositoryProvider));
 });
 
 final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {

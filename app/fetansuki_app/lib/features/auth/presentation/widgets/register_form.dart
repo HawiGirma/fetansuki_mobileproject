@@ -7,33 +7,49 @@ import 'package:fetansuki_app/features/auth/presentation/providers/auth_state.da
 import 'package:fetansuki_app/common/widgets/custom_button.dart';
 import 'package:fetansuki_app/common/widgets/custom_text_field.dart';
 
-class LoginForm extends ConsumerStatefulWidget {
-  const LoginForm({super.key});
+class RegisterForm extends ConsumerStatefulWidget {
+  const RegisterForm({super.key});
 
   @override
-  ConsumerState<LoginForm> createState() => _LoginFormState();
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends ConsumerState<LoginForm> {
+class _RegisterFormState extends ConsumerState<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      ref.read(authNotifierProvider.notifier).login(
+      ref.read(authNotifierProvider.notifier).register(
+            _usernameController.text,
             _emailController.text,
             _passwordController.text,
           );
     }
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != _passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
   }
 
   @override
@@ -43,7 +59,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     ref.listen(authNotifierProvider, (previous, next) {
       if (next.status == AuthStatus.failure) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage ?? 'Authentication Failed')),
+          SnackBar(content: Text(next.errorMessage ?? 'Registration Failed')),
         );
       }
     });
@@ -52,10 +68,18 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       key: _formKey,
       child: Column(
         children: [
+          // Username Field
+          CustomTextField(
+            controller: _usernameController,
+            hintText: 'Username',
+            validator: (value) => value == null || value.isEmpty ? 'Username is required' : null,
+          ),
+          const SizedBox(height: 20),
+
           // Email Field
           CustomTextField(
             controller: _emailController,
-            hintText: 'Enter your email',
+            hintText: 'Email',
             validator: Validators.validateEmail,
             keyboardType: TextInputType.emailAddress,
           ),
@@ -64,7 +88,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           // Password Field
           CustomTextField(
             controller: _passwordController,
-            hintText: 'Enter your password',
+            hintText: 'Password',
             validator: Validators.validatePassword,
             obscureText: !_isPasswordVisible,
             suffixIcon: IconButton(
@@ -79,36 +103,44 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               },
             ),
           ),
-          
-          // Forgot Password
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(color: Colors.grey),
+          const SizedBox(height: 20),
+
+          // Confirm Password Field
+          CustomTextField(
+            controller: _confirmPasswordController,
+            hintText: 'Confirm password',
+            validator: _validateConfirmPassword,
+            obscureText: !_isConfirmPasswordVisible,
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                color: Colors.grey,
               ),
+              onPressed: () {
+                setState(() {
+                  _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                });
+              },
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 30),
 
-          // Login Button
+          // Register Button
           CustomButton(
-            text: 'Login',
+            text: 'Sign Up',
             onPressed: _submit,
             isLoading: authState.status == AuthStatus.loading,
           ),
           
           const SizedBox(height: 40),
 
-          // Or Login with
+          // Or Register with
           const Row(
             children: [
               Expanded(child: Divider(color: Colors.grey, thickness: 0.5)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Or Login with', style: TextStyle(color: Colors.grey)),
+                child: Text('Or Register with', style: TextStyle(color: Colors.grey)),
               ),
               Expanded(child: Divider(color: Colors.grey, thickness: 0.5)),
             ],
@@ -127,20 +159,21 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           ),
           const SizedBox(height: 50),
 
-          // Register Now
+          // Login Now
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Don't have an account? ",
+                "Already have an account? ",
                 style: TextStyle(color: Colors.black87),
               ),
               GestureDetector(
                 onTap: () {
-                  context.push('/register');
+                    // Navigate to Login Page
+                    context.go('/login');
                 },
                 child: const Text(
-                  'Register Now',
+                  'Login Now',
                   style: TextStyle(
                     color: Color(0xFF14B8A6), // Teal/Cyan
                     fontWeight: FontWeight.bold,
