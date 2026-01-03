@@ -14,7 +14,7 @@ class FetansukiApp extends ConsumerWidget {
       title: 'Fetansuki App',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

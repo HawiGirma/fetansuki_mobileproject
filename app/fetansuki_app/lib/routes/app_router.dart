@@ -5,9 +5,16 @@ import 'package:fetansuki_app/features/auth/presentation/pages/login_page.dart';
 import 'package:fetansuki_app/features/auth/presentation/pages/register_page.dart';
 import 'package:fetansuki_app/features/auth/presentation/providers/auth_providers.dart';
 import 'package:fetansuki_app/features/auth/presentation/providers/auth_state.dart';
+import 'package:fetansuki_app/features/dashboard/presentation/pages/home_page.dart';
+import 'package:fetansuki_app/features/stock/presentation/pages/stock_page.dart';
+import 'package:fetansuki_app/features/credit/presentation/pages/credit_page.dart';
+import 'package:fetansuki_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:fetansuki_app/features/main_nav/presentation/pages/main_nav_page.dart';
+
+// Navigator Keys for maintaining state
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // We use a ValueNotifier to notify GoRouter when auth state changes.
   final authStateNotifier = ValueNotifier<AuthStatus>(AuthStatus.initial);
 
   ref.listen<AuthState>(
@@ -18,6 +25,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     initialLocation: '/',
     refreshListenable: authStateNotifier,
     redirect: (context, state) {
@@ -44,11 +52,44 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Dashboard (Protected)')),
-        ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainNavPage(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                builder: (context, state) => const HomePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/stock',
+                builder: (context, state) => const StockPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/credit',
+                builder: (context, state) => const CreditPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/settings',
+                builder: (context, state) => const SettingsPage(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: '/login',
