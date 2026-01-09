@@ -11,6 +11,8 @@ import 'package:fetansuki_app/features/credit/presentation/pages/credit_page.dar
 import 'package:fetansuki_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:fetansuki_app/features/main_nav/presentation/pages/main_nav_page.dart';
 
+import 'package:fetansuki_app/features/splash/presentation/pages/splash_page.dart';
+
 // Navigator Keys for maintaining state
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -26,20 +28,26 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/',
+    initialLocation: '/splash',
     refreshListenable: authStateNotifier,
     redirect: (context, state) {
       final authState = ref.read(authNotifierProvider);
       final isLoggedIn = authState.status == AuthStatus.authenticated;
       
+      final isSplash = state.uri.path == '/splash';
       final isLoggingIn = state.uri.path == '/login';
       final isRegistering = state.uri.path == '/register';
 
       if (authState.status == AuthStatus.loading) {
-        return null; // Or a loading route
+        return null;
       }
 
-      // If not logged in and not on a public page (login or register), redirect to login
+      // If on splash, let the splash timer handle navigation
+      if (isSplash) {
+        return null;
+      }
+
+      // If not logged in and not on a public page, redirect to login
       if (!isLoggedIn && !isLoggingIn && !isRegistering) {
         return '/login';
       }
@@ -52,6 +60,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainNavPage(navigationShell: navigationShell);
