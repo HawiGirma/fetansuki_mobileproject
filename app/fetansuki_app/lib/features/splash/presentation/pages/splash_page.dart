@@ -22,7 +22,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
   Future<void> _checkAuth() async {
     // Artificial delay to show the splash screen
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
     
     if (!mounted) return;
 
@@ -93,7 +93,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: _showButtons ? () => context.push('/login') : null,
+                        onPressed: _showButtons ? () => context.go('/login') : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0D47A1),
                           foregroundColor: Colors.white,
@@ -116,7 +116,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                       width: double.infinity,
                       height: 56,
                       child: OutlinedButton(
-                        onPressed: _showButtons ? () => context.push('/register') : null,
+                        onPressed: _showButtons ? () => context.go('/register') : null,
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: const Color(0xFF0D47A1),

@@ -17,7 +17,9 @@ import 'package:fetansuki_app/features/splash/presentation/pages/splash_page.dar
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authStateNotifier = ValueNotifier<AuthStatus>(AuthStatus.initial);
+  // Initialize with current status to avoid missing initial state
+  final currentStatus = ref.read(authNotifierProvider).status;
+  final authStateNotifier = ValueNotifier<AuthStatus>(currentStatus);
 
   ref.listen<AuthState>(
     authNotifierProvider,
@@ -34,27 +36,24 @@ final routerProvider = Provider<GoRouter>((ref) {
       final authState = ref.read(authNotifierProvider);
       final isLoggedIn = authState.status == AuthStatus.authenticated;
       
-      final isSplash = state.uri.path == '/splash';
-      final isLoggingIn = state.uri.path == '/login';
-      final isRegistering = state.uri.path == '/register';
+      final path = state.uri.path;
+      final isSplash = path == '/splash';
+      final isAuthPage = path == '/login' || path == '/register';
 
       if (authState.status == AuthStatus.loading) {
         return null;
       }
 
-      // If on splash, let the splash timer handle navigation
-      if (isSplash) {
-        return null;
-      }
-
-      // If not logged in and not on a public page, redirect to login
-      if (!isLoggedIn && !isLoggingIn && !isRegistering) {
-        return '/login';
-      }
-
-      // If logged in and trying to access auth pages, redirect to dashboard
-      if (isLoggedIn && (isLoggingIn || isRegistering)) {
-        return '/';
+      // If logged in, redirect away from splash and auth pages to home
+      if (isLoggedIn) {
+        if (isSplash || isAuthPage) {
+          return '/';
+        }
+      } 
+      
+      // If not logged in and trying to access a protected page, redirect to splash
+      if (!isLoggedIn && !isSplash && !isAuthPage) {
+        return '/splash';
       }
 
       return null;

@@ -3,8 +3,13 @@ import 'package:fetansuki_app/features/settings/domain/entities/setting_option.d
 
 class SettingsList extends StatelessWidget {
   final List<SettingOption> options;
+  final Function(SettingOption) onOptionTap;
 
-  const SettingsList({super.key, required this.options});
+  const SettingsList({
+    super.key,
+    required this.options,
+    required this.onOptionTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class SettingsList extends StatelessWidget {
               ),
             ),
             trailing: _buildTrailing(option),
-            onTap: () {},
+            onTap: () => onOptionTap(option),
           );
         },
       ),

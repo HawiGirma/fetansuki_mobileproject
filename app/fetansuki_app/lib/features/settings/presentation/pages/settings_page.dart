@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fetansuki_app/features/auth/presentation/providers/auth_providers.dart';
 import 'package:fetansuki_app/features/settings/presentation/providers/settings_providers.dart';
 import 'package:fetansuki_app/features/settings/presentation/widgets/profile_card.dart';
 import 'package:fetansuki_app/features/settings/presentation/widgets/profile_header.dart';
@@ -29,7 +30,14 @@ class SettingsPage extends ConsumerWidget {
                       const SizedBox(height: 20),
                       ProfileCard(profile: data.profile),
                       const SizedBox(height: 40),
-                      SettingsList(options: data.options),
+                      SettingsList(
+                        options: data.options,
+                        onOptionTap: (option) {
+                          if (option.label == 'Log Out') {
+                            ref.read(authNotifierProvider.notifier).logout();
+                          }
+                        },
+                      ),
                       const SizedBox(height: 40),
                     ],
                   ),

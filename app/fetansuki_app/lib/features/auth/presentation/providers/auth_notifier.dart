@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fetansuki_app/features/auth/domain/entities/user_entity.dart';
+import 'package:fetansuki_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:fetansuki_app/features/auth/data/models/user_model.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/register_usecase.dart';
@@ -12,6 +13,7 @@ class AuthNotifier extends Notifier<AuthState> {
   late final RegisterUseCase _registerUseCase;
   late final LogoutUseCase _logoutUseCase;
   late final AuthRepository _authRepository;
+  late final AuthLocalDataSource _localDataSource;
 
   @override
   AuthState build() {
@@ -19,6 +21,7 @@ class AuthNotifier extends Notifier<AuthState> {
     _registerUseCase = ref.watch(registerUseCaseProvider);
     _logoutUseCase = ref.watch(logoutUseCaseProvider);
     _authRepository = ref.watch(authRepositoryProvider);
+    _localDataSource = ref.watch(authLocalDataSourceProvider);
     
     // Trigger initial check
     Future.microtask(() => checkAuthStatus());
@@ -36,53 +39,51 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> login(String email, String password) async {
-    state = state.copyWith(status: AuthStatus.loading);
-    
-    // TEMPORARY: Simulate successful login for UI testing
-    await Future.delayed(const Duration(seconds: 1));
-    const mockUser = UserEntity(
-      id: '1',
-      email: 'mock@example.com',
-      name: 'Mock User',
-    );
-    state = state.copyWith(status: AuthStatus.authenticated, user: mockUser);
-    
-    /* 
-    // REAL IMPLEMENTATION (Commented out for now)
-    final result = await _loginUseCase(email, password);
-    result.fold(
-      (failure) => state = state.copyWith(
+    try {
+      state = state.copyWith(status: AuthStatus.loading);
+      
+      // TEMPORARY: Simulate successful login for UI testing
+      await Future.delayed(const Duration(seconds: 1));
+      const mockUser = UserModel(
+        id: '1',
+        email: 'mock@example.com',
+        name: 'Mock User',
+      );
+      
+      // Persist mock user
+      await _localDataSource.cacheUser(mockUser);
+      
+      state = state.copyWith(status: AuthStatus.authenticated, user: mockUser);
+    } catch (e) {
+      state = state.copyWith(
         status: AuthStatus.failure,
-        errorMessage: failure.message,
-      ),
-      (user) => state = state.copyWith(status: AuthStatus.authenticated, user: user),
-    );
-    */
+        errorMessage: e.toString(),
+      );
+    }
   }
 
   Future<void> register(String name, String email, String password) async {
-    state = state.copyWith(status: AuthStatus.loading);
-    
-    // TEMPORARY: Simulate successful registration for UI testing
-    await Future.delayed(const Duration(seconds: 1));
-    final mockUser = UserEntity(
-      id: '2',
-      email: email,
-      name: name,
-    );
-    state = state.copyWith(status: AuthStatus.authenticated, user: mockUser);
+    try {
+      state = state.copyWith(status: AuthStatus.loading);
+      
+      // TEMPORARY: Simulate successful registration for UI testing
+      await Future.delayed(const Duration(seconds: 1));
+      final mockUser = UserModel(
+        id: '2',
+        email: email,
+        name: name,
+      );
 
-    /*
-    // REAL IMPLEMENTATION
-    final result = await _registerUseCase(name, email, password);
-    result.fold(
-      (failure) => state = state.copyWith(
+      // Persist mock user
+      await _localDataSource.cacheUser(mockUser);
+
+      state = state.copyWith(status: AuthStatus.authenticated, user: mockUser);
+    } catch (e) {
+      state = state.copyWith(
         status: AuthStatus.failure,
-        errorMessage: failure.message,
-      ),
-      (user) => state = state.copyWith(status: AuthStatus.authenticated, user: user),
-    );
-    */
+        errorMessage: e.toString(),
+      );
+    }
   }
 
   Future<void> logout() async {
