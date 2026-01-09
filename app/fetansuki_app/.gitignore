@@ -12,7 +12,6 @@
 .swiftpm/
 migrate_working_dir/
 
-docs/
 .DS_Store/
 
 # IntelliJ related
