@@ -12,7 +12,20 @@
           "package_name": "com.example.fetansuki_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "673438020148-mks72cq71gt7m2gh8fcb23c92l1ouoeg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fetansuki_app",
+            "certificate_hash": "45fb27e85212598e81bbcdcf96183944a1e0b318"
+          }
+        },
+        {
+          "client_id": "673438020148-1cojtd05291jvehd7deqnsda3bv7kuik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCUZN52knd4eAeQBbHR0mh3DYy9UhahMC0"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673438020148-1cojtd05291jvehd7deqnsda3bv7kuik.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "673438020148-ugj4j3vcnn6m90acccpj99a7u0qu7oko.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fetansukiApp"
+              }
+            }
+          ]
         }
       }
     }
