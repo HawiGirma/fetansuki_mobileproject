@@ -3,11 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fetansuki_app/core/theme/app_theme.dart';
 import 'package:fetansuki_app/routes/app_router.dart';
 
+import 'package:fetansuki_app/features/auth/presentation/providers/user_sync_service.dart';
+
 class FetansukiApp extends ConsumerWidget {
   const FetansukiApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Start the automatic user sync listener
+    ref.watch(userSyncProvider);
+    
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
