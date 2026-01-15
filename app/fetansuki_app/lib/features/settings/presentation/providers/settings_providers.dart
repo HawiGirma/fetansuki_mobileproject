@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fetansuki_app/di/providers.dart';
 import 'package:fetansuki_app/core/utils/constants.dart';
 import 'package:fetansuki_app/features/settings/data/datasources/settings_mock_data_source.dart';
 import 'package:fetansuki_app/features/settings/data/datasources/settings_remote_data_source.dart';
@@ -12,7 +13,9 @@ final settingsMockDataSourceProvider = Provider<SettingsMockDataSource>((ref) {
 });
 
 final settingsRemoteDataSourceProvider = Provider<SettingsRemoteDataSource>((ref) {
-  return SettingsRemoteDataSource();
+  return SettingsRemoteDataSource(
+    firebaseAuth: ref.watch(firebaseAuthProvider),
+  );
 });
 
 // Repository

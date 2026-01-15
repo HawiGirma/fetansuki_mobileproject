@@ -24,23 +24,13 @@ class ProfileCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Icon(
-                  Icons.storefront, // Placeholder for the shop icon in the image
+                  Icons.storefront, 
                   size: 48,
                   color: Colors.blue[800],
                 ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.add,
-                size: 24,
-                color: Colors.black,
-              ),
-            ),
+
           ],
         ),
         const SizedBox(height: 16),
@@ -70,7 +60,7 @@ class ProfileCard extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              profile.phoneNumber,
+              profile.email,
               style: const TextStyle(
                 color: Colors.black87,
                 fontSize: 14,

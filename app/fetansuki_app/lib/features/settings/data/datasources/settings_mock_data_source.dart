@@ -13,7 +13,7 @@ class SettingsMockDataSource implements SettingsDataSource {
       profile: UserProfile(
         name: 'Puerto Rico',
         joinedDate: 'Joined 25,2025',
-        phoneNumber: '+251 1234 567 89',
+        email: 'user@example.com',
         // In a real app, this would be a URL. For mock, we'll handle icon display in the UI if url is null/empty or use a specific asset.
       ),
       options: [

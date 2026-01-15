@@ -14,7 +14,7 @@ class SettingsPage extends ConsumerWidget {
     final settingsDataAsync = ref.watch(settingsDataProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F9FF), // Very light blue bg
+      backgroundColor: const Color(0xFFF5F9FF), 
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => ref.refresh(settingsDataProvider.future),
