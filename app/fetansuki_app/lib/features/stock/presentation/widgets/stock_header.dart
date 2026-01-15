@@ -20,10 +20,10 @@ class StockHeader extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF0D47A1), // Dark blue
+              color: Color(0xFF0D47A1),
             ),
           ),
-          const SizedBox(width: 48), // Spacer to balance the title centering
+          const SizedBox(width: 48), 
         ],
       ),
     );
