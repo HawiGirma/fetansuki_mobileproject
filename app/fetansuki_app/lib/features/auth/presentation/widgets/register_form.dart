@@ -147,15 +147,33 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           ),
           const SizedBox(height: 30),
 
-          // Google Login Button (Placeholder)
-          Container(
-            height: 60,
-            width: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade200),
-              borderRadius: BorderRadius.circular(16),
+          // Google Sign-In Button
+          GestureDetector(
+            onTap: authState.status == AuthStatus.loading
+                ? null
+                : () {
+                    ref.read(authNotifierProvider.notifier).signInWithGoogle();
+                  },
+            child: Container(
+              height: 60,
+              width: 100,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade200),
+                borderRadius: BorderRadius.circular(16),
+                color: authState.status == AuthStatus.loading
+                    ? Colors.grey.shade100
+                    : Colors.white,
+              ),
+              child: authState.status == AuthStatus.loading
+                  ? const Center(
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
+                  : Image.asset("assets/images/google_icon.png"),
             ),
-            child: Image.asset("assets/images/google_icon.png"),
           ),
           const SizedBox(height: 50),
 

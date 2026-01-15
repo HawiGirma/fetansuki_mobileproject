@@ -7,12 +7,15 @@ import 'package:fetansuki_app/features/auth/domain/repositories/auth_repository.
 import 'package:fetansuki_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/register_usecase.dart';
+import 'package:fetansuki_app/features/auth/domain/usecases/google_signin_usecase.dart';
 import 'package:fetansuki_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:fetansuki_app/features/auth/presentation/providers/auth_state.dart';
 
 // Data Sources
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  return AuthRemoteDataSourceImpl(ref.watch(apiClientProvider));
+  return AuthRemoteDataSourceImpl(
+    firebaseAuth: ref.watch(firebaseAuthProvider),
+  );
 });
 
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
@@ -25,6 +28,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
     remoteDataSource: ref.watch(authRemoteDataSourceProvider),
     localDataSource: ref.watch(authLocalDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
+    supabaseClient: ref.watch(supabaseClientProvider),
   );
 });
 
@@ -39,6 +43,10 @@ final registerUseCaseProvider = Provider<RegisterUseCase>((ref) {
 
 final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {
   return LogoutUseCase(ref.watch(authRepositoryProvider));
+});
+
+final googleSignInUseCaseProvider = Provider<GoogleSignInUseCase>((ref) {
+  return GoogleSignInUseCase(ref.watch(authRepositoryProvider));
 });
 
 // Notifier
