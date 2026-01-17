@@ -6,19 +6,16 @@ import 'package:fetansuki_app/features/auth/data/datasources/auth_local_data_sou
 import 'package:fetansuki_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:fetansuki_app/features/auth/domain/entities/user_entity.dart';
 import 'package:fetansuki_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
-  final SupabaseClient supabaseClient;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
-    required this.supabaseClient,
   });
 
   @override
