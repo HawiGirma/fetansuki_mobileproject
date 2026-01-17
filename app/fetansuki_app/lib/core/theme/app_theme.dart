@@ -5,6 +5,7 @@ class AppTheme {
     return ThemeData(
       scaffoldBackgroundColor: Colors.white,
       primarySwatch: Colors.blue,
+      fontFamily: 'sans-serif',
       visualDensity: VisualDensity.adaptivePlatformDensity,
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(),
@@ -19,7 +20,9 @@ class AppTheme {
   }
 
   static ThemeData get darkTheme {
-    return ThemeData.dark().copyWith(
+    return ThemeData(
+      brightness: Brightness.dark,
+      fontFamily: 'sans-serif',
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(),
         filled: true,
