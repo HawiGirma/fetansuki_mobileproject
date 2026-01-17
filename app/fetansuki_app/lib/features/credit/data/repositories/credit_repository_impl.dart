@@ -15,10 +15,10 @@ class CreditRepositoryImpl implements CreditRepository {
     try {
       final data = await dataSource.getCreditData();
       return Right(data);
-    } on ServerException {
-      return const Left(ServerFailure('Server Error'));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
-      return const Left(ServerFailure('Unexpected Error'));
+      return Left(ServerFailure(e.toString()));
     }
   }
 }
