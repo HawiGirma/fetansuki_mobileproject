@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:fetansuki_app/app.dart';
 import 'package:fetansuki_app/di/providers.dart';
@@ -57,19 +56,12 @@ void main() async {
     // Load Environment Variables
     await dotenv.load(fileName: "assets/.env");
 
-    // Initialize Supabase
-    await Supabase.initialize(
-      url: dotenv.env['SUPABASE_URL']!,
-      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-    );
-
     runApp(
       ProviderScope(
         overrides: [
           // Injecting the initialized dependencies into the provider tree
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
           firebaseCoreProvider.overrideWithValue(firebaseApp),
-          supabaseClientProvider.overrideWithValue(Supabase.instance.client),
         ],
         observers: [
           AppProviderObserver(),

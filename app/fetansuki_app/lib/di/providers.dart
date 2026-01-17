@@ -4,16 +4,12 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 // Core Services
 import '../core/network/network_info.dart';
 import '../core/network/api_client.dart';
 
-// Supabase
-final supabaseClientProvider = Provider<SupabaseClient>((ref) {
-  throw UnimplementedError('SupabaseClient must be provided in main.dart');
-});
 
 // Firebase
 final firebaseCoreProvider = Provider<FirebaseApp>((ref) {
@@ -22,6 +18,10 @@ final firebaseCoreProvider = Provider<FirebaseApp>((ref) {
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
   return FirebaseAuth.instance;
+});
+
+final firebaseStorageProvider = Provider<FirebaseStorage>((ref) {
+  return FirebaseStorage.instance;
 });
 
 // External Services
@@ -67,17 +67,11 @@ final apiClientProvider = Provider<ApiClient>((ref) {
 });
 
 // Environment Configuration
-class AppConfig {
-  final String supabaseUrl;
-  final String supabaseAnonKey;
-  final String supabaseFunctionsUrl;
+  class AppConfig {
   final String firebaseProjectId;
   final bool isDebugMode;
 
   const AppConfig({
-    required this.supabaseUrl,
-    required this.supabaseAnonKey,
-    required this.supabaseFunctionsUrl,
     required this.firebaseProjectId,
     required this.isDebugMode,
   });
@@ -96,25 +90,16 @@ final appConfigProvider = Provider<AppConfig>((ref) {
   switch (environment) {
     case Environment.development:
       return const AppConfig(
-        supabaseUrl: 'https://xxxx-dev.supabase.co',
-        supabaseAnonKey: 'your-dev-anon-key',
-        supabaseFunctionsUrl: 'https://xxxx-dev.supabase.co/functions/v1',
         firebaseProjectId: 'fetansuki-dev',
         isDebugMode: true,
       );
     case Environment.staging:
       return const AppConfig(
-        supabaseUrl: 'https://xxxx-staging.supabase.co',
-        supabaseAnonKey: 'your-staging-anon-key',
-        supabaseFunctionsUrl: 'https://xxxx-staging.supabase.co/functions/v1',
         firebaseProjectId: 'fetansuki-staging',
         isDebugMode: false,
       );
     case Environment.production:
       return const AppConfig(
-        supabaseUrl: 'https://xxxx.supabase.co',
-        supabaseAnonKey: 'your-prod-anon-key',
-        supabaseFunctionsUrl: 'https://xxxx.supabase.co/functions/v1',
         firebaseProjectId: 'fetansuki-app',
         isDebugMode: false,
       );

@@ -9,6 +9,8 @@ import 'package:fetansuki_app/features/dashboard/presentation/pages/home_page.da
 import 'package:fetansuki_app/features/stock/presentation/pages/stock_page.dart';
 import 'package:fetansuki_app/features/credit/presentation/pages/credit_page.dart';
 import 'package:fetansuki_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:fetansuki_app/features/receipt/presentation/pages/receipt_page.dart';
+import 'package:fetansuki_app/features/receipt/presentation/pages/receipt_detail_page.dart';
 import 'package:fetansuki_app/features/main_nav/presentation/pages/main_nav_page.dart';
 
 import 'package:fetansuki_app/features/splash/presentation/pages/splash_page.dart';
@@ -97,6 +99,22 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/settings',
                 builder: (context, state) => const SettingsPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/receipt',
+                builder: (context, state) => const ReceiptPage(),
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) => ReceiptDetailPage(
+                      receiptId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

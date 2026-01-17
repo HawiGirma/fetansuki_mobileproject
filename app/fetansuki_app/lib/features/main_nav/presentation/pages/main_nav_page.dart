@@ -54,6 +54,12 @@ class MainNavPage extends StatelessWidget {
                         isSelected: navigationShell.currentIndex == 3,
                         onTap: () => _onTap(context, 3),
                       ),
+                      // _BottomNavItem(
+                      //   icon: Icons.receipt_long_outlined,
+                      //   label: 'Receipt',
+                      //   isSelected: navigationShell.currentIndex == 4,
+                      //   onTap: () => _onTap(context, 4),
+                      // ),
                     ],
                   ),
                 ),
@@ -63,8 +69,8 @@ class MainNavPage extends StatelessWidget {
               // Action Button (FAB style)
               GestureDetector(
                 onTap: () {
-                   // Handle action
-                   debugPrint('FAB Clicked');
+                   // Navigate to Receipt Page
+                   _onTap(context, 4);
                 },
                 child: Container(
                   width: 64,
