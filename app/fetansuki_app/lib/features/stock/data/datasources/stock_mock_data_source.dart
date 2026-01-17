@@ -70,4 +70,24 @@ class StockMockDataSource implements StockDataSource {
       ],
     );
   }
+
+  @override
+  Future<StockItem> createStockItem(StockItem item) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return item.copyWith(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      createdAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<StockItem> updateStockItem(StockItem item) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return item;
+  }
+
+  @override
+  Future<void> deleteStockItem(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
 }

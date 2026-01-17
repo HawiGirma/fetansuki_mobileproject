@@ -1,4 +1,5 @@
 import 'package:fetansuki_app/features/stock/domain/entities/stock_item.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StockItemModel extends StockItem {
   const StockItemModel({
@@ -21,12 +22,15 @@ class StockItemModel extends StockItem {
       quantity: json['quantity'] as String?,
       description: json['description'] as String?,
       createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at'] as String)
+          ? (json['created_at'] is Timestamp 
+              ? (json['created_at'] as Timestamp).toDate() 
+              : DateTime.parse(json['created_at'] as String))
           : null,
       userId: json['user_id'] as String?,
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
