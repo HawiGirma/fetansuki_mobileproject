@@ -24,53 +24,110 @@ class DashboardRemoteDataSource implements DashboardDataSource {
         throw UnauthorizedException('User not authenticated');
       }
 
-      // 1. Fetch wallet balance from sales
+      // 1. Fetch sales and count frequencies for Best Reviewed
       final salesSnapshot = await firestore
           .collection('sales')
           .where('user_id', isEqualTo: user.uid)
           .get();
       
       double walletBalance = 0;
+      int totalSalesCount = salesSnapshot.size;
+      final Map<String, int> productSalesCount = {};
+      
       for (var doc in salesSnapshot.docs) {
-        walletBalance += (doc.data()['total_amount'] as num?)?.toDouble() ?? 0.0;
+        final data = doc.data();
+        walletBalance += (data['total_amount'] as num?)?.toDouble() ?? 0.0;
+        
+        final productId = data['product_id'] as String?;
+        if (productId != null) {
+          productSalesCount[productId] = (productSalesCount[productId] ?? 0) + 1;
+        }
       }
 
-      // 2. Fetch new arrived products from stock_items
+      // 2. Fetch all stock items to populate lists
       final stockSnapshot = await firestore
           .collection('stock_items')
           .where('user_id', isEqualTo: user.uid)
-          .orderBy('created_at', descending: true)
-          .limit(5)
           .get();
 
-      final newArrived = stockSnapshot.docs.map((doc) {
+      int totalProductsCount = stockSnapshot.size;
+      final allStockItems = stockSnapshot.docs.map((doc) {
         final data = doc.data();
-        return Product(
-          id: doc.id,
-          name: data['name'] as String? ?? 'No Name',
-          price: (data['price'] as num?)?.toDouble() ?? 0.0,
-          imageUrl: data['image_url'] as String? ?? '',
-        );
+        final imageUrl = data['image_url'] as String? ?? '';
+        
+        return {
+          'id': doc.id,
+          'name': data['name'] as String? ?? 'No Name',
+          'price': (data['price'] as num?)?.toDouble() ?? 0.0,
+          'imageUrl': imageUrl,
+          'created_at': data['created_at'] as Timestamp?,
+          'salesCount': productSalesCount[doc.id] ?? 0,
+        };
       }).toList();
 
-      // 3. Create some dummy updates for now or fetch from an audit log
+      // Sort for New Arrived (Recent first)
+      final sortedByDate = List.from(allStockItems);
+      sortedByDate.sort((a, b) {
+        final dateA = a['created_at'] as Timestamp?;
+        final dateB = b['created_at'] as Timestamp?;
+        if (dateA == null && dateB == null) return 0;
+        if (dateA == null) return -1;
+        if (dateB == null) return 1;
+        return dateB.compareTo(dateA);
+      });
+
+      final newArrived = sortedByDate.take(5).map((data) => Product(
+        id: data['id'] as String,
+        name: data['name'] as String,
+        price: data['price'] as double,
+        imageUrl: data['imageUrl'] as String,
+      )).toList();
+
+      // Sort for Best Reviewed (Most sales first)
+      final sortedBySales = List.from(allStockItems);
+      sortedBySales.sort((a, b) => (b['salesCount'] as int).compareTo(a['salesCount'] as int));
+
+      final bestReviewed = sortedBySales.take(5).map((data) => Product(
+        id: data['id'] as String,
+        name: data['name'] as String,
+        price: data['price'] as double,
+        imageUrl: data['imageUrl'] as String,
+      )).toList();
+
+      // 3. Fetch active credits
+      final creditsSnapshot = await firestore
+          .collection('credits')
+          .where('user_id', isEqualTo: user.uid)
+          .get();
+      
+      double activeCreditsAmount = 0;
+      int activeCreditsCount = 0;
+      for (var doc in creditsSnapshot.docs) {
+        final data = doc.data();
+        if (data['status'] != 'paid') {
+          activeCreditsCount++;
+          final amountStr = data['amount']?.toString() ?? '0';
+          activeCreditsAmount += double.tryParse(amountStr) ?? 0.0;
+        }
+      }
+
       final updates = [
          UpdateItem(
-          id: '1',
+          id: 'sales',
           title: 'Total Sales',
-          subtitle: 'Today',
+          subtitle: 'Lifetime',
           currentAmount: walletBalance,
-          totalAmount: 50000.0,
+          totalAmount: 1000000.0,
           iconColor: Colors.blue.withAlpha(25),
           iconTintColor: Colors.blue,
           iconData: Icons.trending_up,
         ),
         UpdateItem(
-          id: '2',
+          id: 'credits',
           title: 'Active Credits',
-          subtitle: 'Pending',
-          currentAmount: 12000.0,
-          totalAmount: 20000.0,
+          subtitle: 'Pending Collection',
+          currentAmount: activeCreditsAmount,
+          totalAmount: 50000.0,
           iconColor: Colors.orange.withAlpha(25),
           iconTintColor: Colors.orange,
           iconData: Icons.credit_card,
@@ -79,8 +136,13 @@ class DashboardRemoteDataSource implements DashboardDataSource {
 
       return DashboardData(
         walletBalance: walletBalance,
+        totalActiveCreditsAmount: activeCreditsAmount,
+        totalSalesCount: totalSalesCount,
+        totalActiveCreditsCount: activeCreditsCount,
+        totalProductsCount: totalProductsCount,
         currency: 'ETB',
         newArrived: newArrived,
+        bestReviewed: bestReviewed,
         updates: updates,
       );
     } on FirebaseException catch (e, s) {

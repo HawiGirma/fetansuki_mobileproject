@@ -33,7 +33,7 @@ class StockPage extends ConsumerWidget {
                     children: [
                       CategoryList(categories: data.categories),
                       const SizedBox(height: 24),
-                      BestReviewedList(items: data.bestReviewed),
+                      BestReviewedList(products: data.bestReviewed),
                       const SizedBox(height: 12), // Reduced spacing slightly
                       RecentlyAddedGrid(items: data.recentlyAdded),
                       const SizedBox(height: 40),

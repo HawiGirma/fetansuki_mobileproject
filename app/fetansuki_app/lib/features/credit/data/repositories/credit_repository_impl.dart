@@ -21,4 +21,16 @@ class CreditRepositoryImpl implements CreditRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> updateCreditStatus(String id, String status) async {
+    try {
+      await dataSource.updateCreditStatus(id, status);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

@@ -20,16 +20,14 @@ class HomeHeader extends StatelessWidget {
           ),
           Row(
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_outlined),
-                color: Colors.black87,
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.grid_view_outlined),
-                color: Colors.black87,
-              ),
+          IconButton(
+            onPressed: () => context.push('/notifications'),
+            icon: const Badge(
+              label: Text('3'),
+              child: Icon(Icons.notifications_outlined),
+            ),
+            color: const Color(0xFF0F3C7E),
+          ),
             ],
           ),
         ],

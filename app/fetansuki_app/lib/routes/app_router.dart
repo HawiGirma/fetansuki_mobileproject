@@ -12,7 +12,7 @@ import 'package:fetansuki_app/features/settings/presentation/pages/settings_page
 import 'package:fetansuki_app/features/receipt/presentation/pages/receipt_page.dart';
 import 'package:fetansuki_app/features/receipt/presentation/pages/receipt_detail_page.dart';
 import 'package:fetansuki_app/features/main_nav/presentation/pages/main_nav_page.dart';
-
+import 'package:fetansuki_app/features/notifications/presentation/pages/notification_page.dart';
 import 'package:fetansuki_app/features/splash/presentation/pages/splash_page.dart';
 
 // Navigator Keys for maintaining state
@@ -127,6 +127,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterPage(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationPage(),
       ),
     ],
   );

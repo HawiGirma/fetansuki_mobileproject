@@ -18,11 +18,7 @@ class StockHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined),
-            color: Colors.black87,
-          ),
+          const SizedBox(width: 48), // Spacer to balance the right icon
           const Text(
             'Stock and Inventory',
             style: TextStyle(

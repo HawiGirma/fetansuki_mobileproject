@@ -55,6 +55,21 @@ class StockCreationNotifier extends StateNotifier<StockCreationState> {
     );
   }
 
+  Future<bool> deleteStockItem(String id) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    final result = await repository.deleteStockItem(id);
+    return result.fold(
+      (failure) {
+        state = state.copyWith(isLoading: false, errorMessage: failure.message);
+        return false;
+      },
+      (_) {
+        state = state.copyWith(isLoading: false, errorMessage: null);
+        return true;
+      },
+    );
+  }
+
   void reset() {
     state = const StockCreationState();
   }

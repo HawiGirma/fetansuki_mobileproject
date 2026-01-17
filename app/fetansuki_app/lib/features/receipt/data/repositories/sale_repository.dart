@@ -17,6 +17,7 @@ class SaleRepository {
     String paymentType = 'Cash',
     String? buyerName,
     String? buyerPhone,
+    DateTime? dueDate,
   }) async {
     final user = _auth.currentUser;
     if (user == null) throw UnauthorizedException('User not authenticated');
@@ -95,6 +96,7 @@ class SaleRepository {
           'amount': total,
           'buyer_phone': buyerPhone,
           'status': 'pending',
+          'due_date': dueDate != null ? Timestamp.fromDate(dueDate) : null,
           'created_at': FieldValue.serverTimestamp(),
         });
       }

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fetansuki_app/core/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fetansuki_app/features/credit/presentation/providers/credit_update_notifier.dart';
 import 'package:fetansuki_app/features/credit/data/datasources/credit_mock_data_source.dart';
 import 'package:fetansuki_app/features/credit/data/datasources/credit_remote_data_source.dart';
 import 'package:fetansuki_app/features/credit/data/repositories/credit_repository_impl.dart';
@@ -43,4 +44,8 @@ final creditDataProvider = FutureProvider<CreditData>((ref) async {
     },
     (data) => data,
   );
+});
+final creditUpdateProvider = StateNotifierProvider<CreditUpdateNotifier, CreditUpdateState>((ref) {
+  final repository = ref.watch(creditRepositoryProvider);
+  return CreditUpdateNotifier(repository);
 });

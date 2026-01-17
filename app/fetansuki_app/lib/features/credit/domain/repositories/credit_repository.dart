@@ -4,4 +4,5 @@ import 'package:fpdart/fpdart.dart';
 
 abstract class CreditRepository {
   Future<Either<Failure, CreditData>> getCreditData();
+  Future<Either<Failure, void>> updateCreditStatus(String id, String status);
 }

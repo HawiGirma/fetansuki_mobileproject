@@ -2,6 +2,7 @@ import 'package:fetansuki_app/features/stock/data/datasources/stock_data_source.
 import 'package:fetansuki_app/features/stock/domain/entities/stock_category.dart';
 import 'package:fetansuki_app/features/stock/domain/entities/stock_data.dart';
 import 'package:fetansuki_app/features/stock/domain/entities/stock_item.dart';
+import 'package:fetansuki_app/features/dashboard/domain/entities/product.dart';
 
 class StockMockDataSource implements StockDataSource {
   @override
@@ -17,13 +18,13 @@ class StockMockDataSource implements StockDataSource {
         StockCategory(id: '5', name: 'Diaries'),
       ],
       bestReviewed: [
-        StockItem(
+        Product(
           id: '1',
           name: 'Lotion Radiance',
           imageUrl: 'https://via.placeholder.com/150',
           price: 25.00,
         ),
-        StockItem(
+        Product(
           id: '2',
           name: 'Lotion Shimmer',
           imageUrl: 'https://via.placeholder.com/150',

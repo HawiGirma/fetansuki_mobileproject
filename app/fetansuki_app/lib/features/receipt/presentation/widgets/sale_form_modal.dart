@@ -1,3 +1,6 @@
+import 'package:fetansuki_app/features/dashboard/presentation/providers/dashboard_providers.dart';
+import 'package:fetansuki_app/features/stock/presentation/providers/stock_providers.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fetansuki_app/features/stock/domain/entities/stock_item.dart';
@@ -20,7 +23,20 @@ class _SaleFormModalState extends ConsumerState<SaleFormModal> {
   final _buyerNameController = TextEditingController();
   final _buyerPhoneController = TextEditingController();
   String _paymentType = 'Cash';
+  DateTime? _dueDate;
   bool _isLoading = false;
+
+  Future<void> _selectDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(const Duration(days: 7)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null) {
+      setState(() => _dueDate = picked);
+    }
+  }
 
   @override
   void dispose() {
@@ -45,9 +61,12 @@ class _SaleFormModalState extends ConsumerState<SaleFormModal> {
         paymentType: _paymentType,
         buyerName: _paymentType == 'Credit' ? _buyerNameController.text : null,
         buyerPhone: _paymentType == 'Credit' ? _buyerPhoneController.text : null,
+        dueDate: _paymentType == 'Credit' ? _dueDate : null,
       );
 
       if (mounted) {
+        ref.invalidate(dashboardDataProvider);
+        ref.invalidate(stockDataProvider);
         Navigator.pop(context); // Close modal
         context.push('/receipt/${receipt.id}'); // Navigate to specific receipt detail
       }
@@ -124,6 +143,18 @@ class _SaleFormModalState extends ConsumerState<SaleFormModal> {
                     if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(v)) return 'Invalid phone number';
                     return null;
                   },
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  title: const Text('Due Date (Optional)'),
+                  subtitle: Text(_dueDate == null ? 'Not set' : DateFormat('MMM dd, yyyy').format(_dueDate!)),
+                  trailing: const Icon(Icons.calendar_today),
+                  onTap: _selectDate,
+                  contentPadding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(color: Colors.grey[400]!),
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],

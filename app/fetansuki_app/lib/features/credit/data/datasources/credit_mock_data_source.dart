@@ -56,4 +56,9 @@ class CreditMockDataSource implements CreditDataSource {
       ],
     );
   }
+
+  @override
+  Future<void> updateCreditStatus(String id, String status) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
 }

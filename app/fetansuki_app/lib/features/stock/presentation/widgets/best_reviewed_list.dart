@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fetansuki_app/features/stock/domain/entities/stock_item.dart';
+import 'package:fetansuki_app/features/dashboard/domain/entities/product.dart';
 
 class BestReviewedList extends StatelessWidget {
-  final List<StockItem> items;
+  final List<Product> products;
 
-  const BestReviewedList({super.key, required this.items});
+  const BestReviewedList({super.key, required this.products});
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +39,10 @@ class BestReviewedList extends StatelessWidget {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             scrollDirection: Axis.horizontal,
-            itemCount: items.length,
+            itemCount: products.length,
             separatorBuilder: (context, index) => const SizedBox(width: 16),
             itemBuilder: (context, index) {
-              return _ItemCard(item: items[index]);
+              return _ItemCard(product: products[index]);
             },
           ),
         ),
@@ -51,9 +52,9 @@ class BestReviewedList extends StatelessWidget {
 }
 
 class _ItemCard extends StatelessWidget {
-  final StockItem item;
+  final Product product;
 
-  const _ItemCard({required this.item});
+  const _ItemCard({required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,13 @@ class _ItemCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(10),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,19 +77,19 @@ class _ItemCard extends StatelessWidget {
           Expanded(
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-              child: Image.network(
-                item.imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[200],
-                    child: const Center(
-                      child: Icon(Icons.image_not_supported, color: Colors.grey),
+              child: product.imageUrl.startsWith('data:')
+                  ? Image.memory(
+                      base64Decode(product.imageUrl.split(',').last),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) => _buildImageError(),
+                    )
+                  : Image.network(
+                      product.imageUrl,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) => _buildImageError(),
                     ),
-                  );
-                },
-              ),
             ),
           ),
           Padding(
@@ -90,7 +98,7 @@ class _ItemCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.name,
+                  product.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -99,18 +107,27 @@ class _ItemCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                if (item.price != null)
-                  Text(
-                    '\$${item.price!.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                Text(
+                  '${product.price.toStringAsFixed(2)} ETB',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Color(0xFF0F3C7E),
                   ),
+                ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImageError() {
+    return Container(
+      color: Colors.grey[200],
+      child: const Center(
+        child: Icon(Icons.image_not_supported, color: Colors.grey),
       ),
     );
   }

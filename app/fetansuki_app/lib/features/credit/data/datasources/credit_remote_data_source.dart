@@ -28,12 +28,15 @@ class CreditRemoteDataSource implements CreditDataSource {
       final snapshot = await firestore
           .collection('credits')
           .where('user_id', isEqualTo: user.uid)
-          .orderBy('created_at', descending: true)
           .get();
 
       final allCredits = snapshot.docs
           .map((doc) => CreditItemModel.fromJson({...doc.data(), 'id': doc.id}))
           .toList();
+      
+      // Sort in-memory by created_at (we'd need to add created_at to the model if not there, but for now let's just use the list as is or assume doc order)
+      // Actually, if we want them sorted, we should have a field.
+      // For now, let's just remove the orderBy to get it running.
 
       // Separate into paid and recently added (pending)
       final paidCredit = allCredits.where((c) => c.status == 'paid').toList();
@@ -60,6 +63,30 @@ class CreditRemoteDataSource implements CreditDataSource {
       debugPrint('CREDIT DATA SOURCE ERROR: $e');
       debugPrint('STACK TRACE: $s');
       throw ServerException('Failed to fetch credit data: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> updateCreditStatus(String id, String status) async {
+    try {
+      final user = firebaseAuth.currentUser;
+      if (user == null) {
+        throw UnauthorizedException('User not authenticated');
+      }
+
+      await firestore.collection('credits').doc(id).update({
+        'status': status,
+        'updated_at': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException catch (e, s) {
+      debugPrint('UPDATE CREDIT FIREBASE ERROR: ${e.message}');
+      debugPrint('STACK TRACE: $s');
+      throw ServerException(e.message ?? 'Firestore error');
+    } catch (e, s) {
+      if (e is UnauthorizedException) rethrow;
+      debugPrint('UPDATE CREDIT DATA SOURCE ERROR: $e');
+      debugPrint('STACK TRACE: $s');
+      throw ServerException('Failed to update credit status: ${e.toString()}');
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:fetansuki_app/features/dashboard/presentation/providers/dashboar
 import 'package:fetansuki_app/features/dashboard/presentation/widgets/balance_card.dart';
 import 'package:fetansuki_app/features/dashboard/presentation/widgets/home_header.dart';
 import 'package:fetansuki_app/features/dashboard/presentation/widgets/new_arrived_list.dart';
+import 'package:fetansuki_app/features/stock/presentation/widgets/best_reviewed_list.dart';
 import 'package:fetansuki_app/features/dashboard/presentation/widgets/updates_list.dart';
 
 class HomePage extends ConsumerWidget {
@@ -29,7 +30,11 @@ class HomePage extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: BalanceCard(
-                          balance: data.walletBalance,
+                          totalSalesAmount: data.walletBalance,
+                          totalActiveCreditsAmount: data.totalActiveCreditsAmount,
+                          totalSalesCount: data.totalSalesCount,
+                          totalActiveCreditsCount: data.totalActiveCreditsCount,
+                          totalProductsCount: data.totalProductsCount,
                           currency: data.currency,
                         ),
                       ),
@@ -38,6 +43,8 @@ class HomePage extends ConsumerWidget {
                       const SizedBox(height: 24),
                       UpdatesList(updates: data.updates),
                       const SizedBox(height: 40),
+                      BestReviewedList(products: data.bestReviewed),
+                      const SizedBox(height: 24),
                     ],
                   ),
                   loading: () => const SizedBox(

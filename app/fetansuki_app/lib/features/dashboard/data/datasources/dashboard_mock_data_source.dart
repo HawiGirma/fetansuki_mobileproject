@@ -12,6 +12,10 @@ class DashboardMockDataSource implements DashboardDataSource {
 
     return const DashboardData(
       walletBalance: 26345.05,
+      totalActiveCreditsAmount: 12500.0,
+      totalSalesCount: 145,
+      totalActiveCreditsCount: 12,
+      totalProductsCount: 84,
       currency: 'Birr',
       newArrived: [
         Product(
@@ -25,6 +29,14 @@ class DashboardMockDataSource implements DashboardDataSource {
           name: 'Lotion Shimmer',
           imageUrl: 'https://via.placeholder.com/150',
           price: 18.50,
+        ),
+      ],
+      bestReviewed: [
+        Product(
+          id: '1',
+          name: 'Lotion Smooth',
+          imageUrl: 'https://via.placeholder.com/150',
+          price: 22.75,
         ),
       ],
       updates: [

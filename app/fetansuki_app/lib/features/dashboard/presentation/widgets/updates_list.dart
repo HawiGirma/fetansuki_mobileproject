@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:fetansuki_app/features/dashboard/domain/entities/update_item.dart';
 
 class UpdatesList extends StatelessWidget {
@@ -43,22 +44,25 @@ class _UpdateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0D47A1), // Dark blue
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          if (item.id == 'sales') {
+            context.go('/receipt');
+          } else if (item.id == 'credits') {
+            context.go('/credit');
+          }
+        },
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF64B5F6), // Light blue shadow/border effect at bottom
-            offset: const Offset(4, 4),
-            blurRadius: 0,
-            spreadRadius: 0,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0F3C7E), // Consistently using the darker blue
+            borderRadius: BorderRadius.circular(24),
           ),
-        ],
-      ),
-      child: Row(
-        children: [
+          child: Row(
+            children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -116,6 +120,8 @@ class _UpdateCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 }
