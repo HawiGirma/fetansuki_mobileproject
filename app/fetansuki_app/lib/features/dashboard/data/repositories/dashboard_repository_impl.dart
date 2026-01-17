@@ -15,10 +15,10 @@ class DashboardRepositoryImpl implements DashboardRepository {
     try {
       final data = await dataSource.getDashboardData();
       return Right(data);
-    } on ServerException {
-      return Left(ServerFailure('Server Error'));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
-      return Left(ServerFailure('Unexpected Error'));
+      return Left(ServerFailure(e.toString()));
     }
   }
 }
