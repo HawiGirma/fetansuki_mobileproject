@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fetansuki_app/core/utils/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fetansuki_app/features/credit/data/datasources/credit_mock_data_source.dart';
 import 'package:fetansuki_app/features/credit/data/datasources/credit_remote_data_source.dart';
 import 'package:fetansuki_app/features/credit/data/repositories/credit_repository_impl.dart';
@@ -12,7 +14,10 @@ final creditMockDataSourceProvider = Provider<CreditMockDataSource>((ref) {
 });
 
 final creditRemoteDataSourceProvider = Provider<CreditRemoteDataSource>((ref) {
-  return CreditRemoteDataSource();
+  return CreditRemoteDataSource(
+    firestore: FirebaseFirestore.instance,
+    firebaseAuth: FirebaseAuth.instance,
+  );
 });
 
 // Repository
@@ -32,7 +37,10 @@ final creditDataProvider = FutureProvider<CreditData>((ref) async {
   final result = await repository.getCreditData();
   
   return result.fold(
-    (failure) => throw Exception(failure.message),
+    (failure) {
+      print('CREDIT ERROR: ${failure.message}');
+      return throw Exception(failure.message);
+    },
     (data) => data,
   );
 });
