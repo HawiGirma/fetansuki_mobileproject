@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fetansuki_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:fetansuki_app/features/auth/domain/usecases/register_usecase.dart';
@@ -14,7 +13,6 @@ class AuthNotifier extends Notifier<AuthState> {
   late final LogoutUseCase _logoutUseCase;
   late final GoogleSignInUseCase _googleSignInUseCase;
   late final AuthRepository _authRepository;
-  late final AuthLocalDataSource _localDataSource;
 
   @override
   AuthState build() {
@@ -23,7 +21,6 @@ class AuthNotifier extends Notifier<AuthState> {
     _logoutUseCase = ref.watch(logoutUseCaseProvider);
     _googleSignInUseCase = ref.watch(googleSignInUseCaseProvider);
     _authRepository = ref.watch(authRepositoryProvider);
-    _localDataSource = ref.watch(authLocalDataSourceProvider);
     
     // Trigger initial check
     Future.microtask(() => checkAuthStatus());
