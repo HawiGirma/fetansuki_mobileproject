@@ -48,8 +48,12 @@ dependencies:
   shared_preferences: ^2.3.2
   equatable: ^2.0.7
   internet_connection_checker: ^3.0.1
-  supabase_flutter: ^2.12.0
   flutter_dotenv: ^6.0.0
+  firebase_storage: ^12.4.10
+  pdf: ^3.11.3
+  path_provider: ^2.1.5
+  share_plus: ^12.0.1
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
