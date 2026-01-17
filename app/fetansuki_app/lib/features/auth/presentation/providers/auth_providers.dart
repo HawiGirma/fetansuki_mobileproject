@@ -28,7 +28,6 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
     remoteDataSource: ref.watch(authRemoteDataSourceProvider),
     localDataSource: ref.watch(authLocalDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
-    supabaseClient: ref.watch(supabaseClientProvider),
   );
 });
 
