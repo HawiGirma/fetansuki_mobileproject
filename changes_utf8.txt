@@ -1,0 +1,41 @@
+﻿ M app/fetansuki_app/lib/common/widgets/custom_text_field.dart
+ M app/fetansuki_app/lib/core/theme/app_theme.dart
+ M app/fetansuki_app/lib/features/credit/data/datasources/credit_data_source.dart
+ M app/fetansuki_app/lib/features/credit/data/datasources/credit_mock_data_source.dart
+ M app/fetansuki_app/lib/features/credit/data/datasources/credit_remote_data_source.dart
+ M app/fetansuki_app/lib/features/credit/data/models/credit_item_model.dart
+ M app/fetansuki_app/lib/features/credit/data/repositories/credit_repository_impl.dart
+ M app/fetansuki_app/lib/features/credit/domain/entities/credit_item.dart
+ M app/fetansuki_app/lib/features/credit/domain/repositories/credit_repository.dart
+ M app/fetansuki_app/lib/features/credit/presentation/providers/credit_providers.dart
+ M app/fetansuki_app/lib/features/credit/presentation/widgets/credit_list.dart
+ M app/fetansuki_app/lib/features/dashboard/data/datasources/dashboard_mock_data_source.dart
+ M app/fetansuki_app/lib/features/dashboard/data/datasources/dashboard_remote_data_source.dart
+ M app/fetansuki_app/lib/features/dashboard/domain/entities/dashboard_data.dart
+ M app/fetansuki_app/lib/features/dashboard/presentation/pages/home_page.dart
+ M app/fetansuki_app/lib/features/dashboard/presentation/widgets/balance_card.dart
+ M app/fetansuki_app/lib/features/dashboard/presentation/widgets/home_header.dart
+ M app/fetansuki_app/lib/features/dashboard/presentation/widgets/new_arrived_list.dart
+ M app/fetansuki_app/lib/features/dashboard/presentation/widgets/updates_list.dart
+ M app/fetansuki_app/lib/features/receipt/data/repositories/sale_repository.dart
+ M app/fetansuki_app/lib/features/receipt/presentation/widgets/sale_form_modal.dart
+ M app/fetansuki_app/lib/features/stock/data/datasources/stock_mock_data_source.dart
+ M app/fetansuki_app/lib/features/stock/data/datasources/stock_remote_data_source.dart
+ M app/fetansuki_app/lib/features/stock/domain/entities/stock_data.dart
+ M app/fetansuki_app/lib/features/stock/presentation/pages/stock_page.dart
+ M app/fetansuki_app/lib/features/stock/presentation/providers/stock_creation_notifier.dart
+ M app/fetansuki_app/lib/features/stock/presentation/widgets/best_reviewed_list.dart
+ M app/fetansuki_app/lib/features/stock/presentation/widgets/create_stock_item_dialog.dart
+ M app/fetansuki_app/lib/features/stock/presentation/widgets/recently_added_grid.dart
+ M app/fetansuki_app/lib/features/stock/presentation/widgets/stock_header.dart
+ M app/fetansuki_app/lib/routes/app_router.dart
+ M app/fetansuki_app/linux/flutter/generated_plugin_registrant.cc
+ M app/fetansuki_app/linux/flutter/generated_plugins.cmake
+ M app/fetansuki_app/macos/Flutter/GeneratedPluginRegistrant.swift
+ M app/fetansuki_app/pubspec.lock
+ M app/fetansuki_app/pubspec.yaml
+?? app/fetansuki_app/lib/features/credit/presentation/providers/credit_update_notifier.dart
+?? app/fetansuki_app/lib/features/credit/presentation/widgets/credit_status_dialog.dart
+?? app/fetansuki_app/lib/features/notifications/
+?? app/fetansuki_app/lib/features/receipt/presentation/widgets/sale_record_dialog.dart
+?? changes.txt
