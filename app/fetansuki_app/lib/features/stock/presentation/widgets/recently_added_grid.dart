@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fetansuki_app/features/stock/domain/entities/stock_item.dart';
+import 'package:fetansuki_app/features/receipt/presentation/widgets/sale_form_modal.dart';
 
 class RecentlyAddedGrid extends StatelessWidget {
   final List<StockItem> items;
@@ -50,60 +51,72 @@ class _RecentItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0D47A1), // Dark blue
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF2E7D32), Color(0xFF1B5E20)], // Green gradient placeholder
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.arrow_outward, // Placeholder icon
-              color: Colors.white,
-              size: 16,
-            ),
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  item.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          builder: (context) => SaleFormModal(item: item),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D47A1), // Dark blue
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF2E7D32), Color(0xFF1B5E20)], // Green gradient placeholder
                 ),
-                if (item.quantity != null)
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.sell, // Updated icon to reflecting selling
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(
-                    item.quantity!,
+                    item.name,
                     style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-              ],
+                  if (item.quantity != null)
+                    Text(
+                      'Stock: ${item.quantity}',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

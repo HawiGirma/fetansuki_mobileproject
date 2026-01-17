@@ -5,6 +5,9 @@ import 'package:fetansuki_app/features/stock/data/datasources/stock_remote_data_
 import 'package:fetansuki_app/features/stock/data/repositories/stock_repository_impl.dart';
 import 'package:fetansuki_app/features/stock/domain/entities/stock_data.dart';
 import 'package:fetansuki_app/features/stock/domain/repositories/stock_repository.dart';
+import 'package:fetansuki_app/features/stock/presentation/providers/stock_creation_notifier.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Data Sources
 final stockMockDataSourceProvider = Provider<StockMockDataSource>((ref) {
@@ -12,7 +15,13 @@ final stockMockDataSourceProvider = Provider<StockMockDataSource>((ref) {
 });
 
 final stockRemoteDataSourceProvider = Provider<StockRemoteDataSource>((ref) {
-  return StockRemoteDataSource();
+  final firestore = FirebaseFirestore.instance;
+  final firebaseAuth = FirebaseAuth.instance;
+  
+  return StockRemoteDataSource(
+    firestore: firestore,
+    firebaseAuth: firebaseAuth,
+  );
 });
 
 // Repository
@@ -34,7 +43,17 @@ final stockDataProvider = FutureProvider<StockData>((ref) async {
   final result = await repository.getStockData();
   
   return result.fold(
-    (failure) => throw Exception(failure.message),
+    (failure) {
+      print('STOCK ERROR: ${failure.message}');
+      return throw Exception(failure.message);
+    },
     (data) => data,
   );
 });
+
+// Stock Creation Provider
+final stockCreationProvider = StateNotifierProvider<StockCreationNotifier, StockCreationState>((ref) {
+  final repository = ref.watch(stockRepositoryProvider);
+  return StockCreationNotifier(repository);
+});
+

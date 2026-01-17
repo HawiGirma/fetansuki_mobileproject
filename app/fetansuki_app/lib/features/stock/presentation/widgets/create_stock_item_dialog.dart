@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fetansuki_app/features/stock/domain/entities/stock_item.dart';
-import 'package:fetansuki_app/features/stock/presentation/providers/stock_creation_notifier.dart';
 import 'package:fetansuki_app/features/stock/presentation/providers/stock_providers.dart';
 
 class CreateStockItemDialog extends ConsumerStatefulWidget {
