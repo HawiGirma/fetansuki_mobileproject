@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fetansuki_app/features/notifications/data/repositories/notification_repository.dart';
+import 'package:fetansuki_app/features/notifications/domain/entities/app_notification.dart';
 import 'package:fetansuki_app/features/stock/domain/entities/stock_item.dart';
 import 'package:fetansuki_app/features/stock/domain/repositories/stock_repository.dart';
 
@@ -28,8 +30,9 @@ class StockCreationState {
 
 class StockCreationNotifier extends StateNotifier<StockCreationState> {
   final StockRepository repository;
+  final NotificationRepository notificationRepository;
 
-  StockCreationNotifier(this.repository) : super(const StockCreationState());
+  StockCreationNotifier(this.repository, this.notificationRepository) : super(const StockCreationState());
 
   Future<bool> createStockItem(StockItem item) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
@@ -50,6 +53,14 @@ class StockCreationNotifier extends StateNotifier<StockCreationState> {
           createdItem: createdItem,
           errorMessage: null,
         );
+
+        // Add notification for added item
+        notificationRepository.addNotification(
+          title: 'Item Added Successful',
+          description: '${createdItem.name} has been added to the stock successfully.',
+          type: NotificationType.stockAdded,
+        );
+
         return true;
       },
     );
