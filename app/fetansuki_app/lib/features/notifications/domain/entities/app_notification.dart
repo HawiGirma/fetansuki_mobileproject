@@ -15,6 +15,7 @@ class AppNotification {
   final DateTime timestamp;
   final NotificationType type;
   final String? userId;
+  final bool isRead;
 
   const AppNotification({
     required this.id,
@@ -23,6 +24,7 @@ class AppNotification {
     required this.timestamp,
     required this.type,
     this.userId,
+    this.isRead = false,
   });
 
   IconData get icon {
@@ -70,6 +72,7 @@ class AppNotification {
         orElse: () => NotificationType.sale,
       ),
       userId: json['user_id'] as String?,
+      isRead: json['is_read'] as bool? ?? false,
     );
   }
 
@@ -81,6 +84,7 @@ class AppNotification {
       'timestamp': timestamp.toIso8601String(),
       'type': type.toString().split('.').last,
       'user_id': userId,
+      'is_read': isRead,
     };
   }
 }

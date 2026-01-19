@@ -25,6 +25,31 @@ class NotificationRepository {
       'type': type.toString().split('.').last,
       'timestamp': FieldValue.serverTimestamp(),
       'user_id': user.uid,
+      'is_read': false,
+    });
+  }
+
+  Future<void> markAllAsRead() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final batch = _firestore.batch();
+    final snapshot = await _firestore
+        .collection('notifications')
+        .where('user_id', isEqualTo: user.uid)
+        .where('is_read', isEqualTo: false)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      batch.update(doc.reference, {'is_read': true});
+    }
+
+    await batch.commit();
+  }
+
+  Future<void> markAsRead(String notificationId) async {
+    await _firestore.collection('notifications').doc(notificationId).update({
+      'is_read': true,
     });
   }
 

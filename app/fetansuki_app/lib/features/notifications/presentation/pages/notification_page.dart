@@ -30,6 +30,15 @@ class NotificationPage extends ConsumerWidget {
           ),
         ),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () {
+              ref.read(notificationRepositoryProvider).markAllAsRead();
+            },
+            child: const Text('Mark all read'),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: notificationsAsync.when(
         data: (notifications) {
@@ -65,7 +74,7 @@ class _NotificationCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: notification.isRead ? Colors.white : Colors.blue.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -98,19 +107,37 @@ class _NotificationCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      notification.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                    Expanded(
+                      child: Text(
+                        notification.title,
+                        style: TextStyle(
+                          fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Text(
-                      _formatTime(notification.timestamp),
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 12,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          _formatTime(notification.timestamp),
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 12,
+                          ),
+                        ),
+                        if (!notification.isRead) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: Colors.blue,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ],
                 ),

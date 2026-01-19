@@ -27,12 +27,12 @@ class HomeHeader extends ConsumerWidget {
             children: [
               notificationsAsync.when(
                 data: (notifications) {
-                  final notificationCount = notifications.length;
+                  final unreadCount = notifications.where((n) => !n.isRead).length;
                   return IconButton(
                     onPressed: () => context.push('/notifications'),
-                    icon: notificationCount > 0
+                    icon: unreadCount > 0
                         ? Badge(
-                            label: Text('$notificationCount'),
+                            label: Text('$unreadCount'),
                             child: const Icon(Icons.notifications_outlined),
                           )
                         : const Icon(Icons.notifications_outlined),
