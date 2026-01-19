@@ -24,19 +24,29 @@ class DashboardRemoteDataSource implements DashboardDataSource {
         throw UnauthorizedException('User not authenticated');
       }
 
-      // 1. Fetch sales and count frequencies for Best Reviewed
+      // 1. Fetch receipts to calculate total sales/wallet balance
+      final receiptsSnapshot = await firestore
+          .collection('receipts')
+          .where('user_id', isEqualTo: user.uid)
+          .get();
+
+      double walletBalance = 0;
+      for (var doc in receiptsSnapshot.docs) {
+        walletBalance += (doc.data()['total'] as num?)?.toDouble() ?? 0.0;
+      }
+
+      // 2. Fetch sales to count frequencies for Best Reviewed
       final salesSnapshot = await firestore
           .collection('sales')
           .where('user_id', isEqualTo: user.uid)
           .get();
       
-      double walletBalance = 0;
       int totalSalesCount = salesSnapshot.size;
       final Map<String, int> productSalesCount = {};
       
       for (var doc in salesSnapshot.docs) {
         final data = doc.data();
-        walletBalance += (data['total_amount'] as num?)?.toDouble() ?? 0.0;
+        // walletBalance calculation moved to receipts
         
         final productId = data['product_id'] as String?;
         if (productId != null) {
