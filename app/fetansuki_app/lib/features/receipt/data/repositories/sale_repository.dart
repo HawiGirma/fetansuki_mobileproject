@@ -4,11 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fetansuki_app/features/receipt/domain/entities/receipt_models.dart';
 import 'package:fetansuki_app/core/error/exceptions.dart';
 
+import 'package:fetansuki_app/features/notifications/data/repositories/notification_repository.dart';
+import 'package:fetansuki_app/features/notifications/domain/entities/app_notification.dart';
+
 class SaleRepository {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
+  final NotificationRepository _notificationRepository;
 
-  SaleRepository(this._firestore, this._auth);
+  SaleRepository(this._firestore, this._auth, this._notificationRepository);
 
   Future<Receipt> processSale({
     required String productId,
@@ -99,6 +103,13 @@ class SaleRepository {
           'due_date': dueDate != null ? Timestamp.fromDate(dueDate) : null,
           'created_at': FieldValue.serverTimestamp(),
         });
+
+        // Add notification for credit
+        await _notificationRepository.addNotification(
+          title: 'Item Added to Credit',
+          description: '$productName ($quantity units) added to credit for ${buyerName ?? "Unknown Buyer"}.',
+          type: NotificationType.credit,
+        );
       }
 
       return receipt;
@@ -123,7 +134,11 @@ class SaleRepository {
 }
 
 final saleRepositoryProvider = Provider<SaleRepository>((ref) {
-  return SaleRepository(FirebaseFirestore.instance, FirebaseAuth.instance);
+  return SaleRepository(
+    FirebaseFirestore.instance,
+    FirebaseAuth.instance,
+    ref.watch(notificationRepositoryProvider),
+  );
 });
 
 final receiptsProvider = StreamProvider<List<Receipt>>((ref) {
