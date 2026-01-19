@@ -1,11 +1,17 @@
+import 'package:fetansuki_app/features/notifications/data/repositories/notification_repository.dart';
+import 'package:fetansuki_app/features/notifications/domain/entities/app_notification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
-class NotificationPage extends StatelessWidget {
+class NotificationPage extends ConsumerWidget {
   const NotificationPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notificationsAsync = ref.watch(notificationsProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F9FF),
       appBar: AppBar(
@@ -25,21 +31,32 @@ class NotificationPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(20),
-        itemCount: _mockNotifications.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 16),
-        itemBuilder: (context, index) {
-          final notification = _mockNotifications[index];
-          return _NotificationCard(notification: notification);
+      body: notificationsAsync.when(
+        data: (notifications) {
+          if (notifications.isEmpty) {
+            return const Center(
+              child: Text('No notifications yet.'),
+            );
+          }
+          return ListView.separated(
+            padding: const EdgeInsets.all(20),
+            itemCount: notifications.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+              return _NotificationCard(notification: notification);
+            },
+          );
         },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
       ),
     );
   }
 }
 
 class _NotificationCard extends StatelessWidget {
-  final Map<String, dynamic> notification;
+  final AppNotification notification;
 
   const _NotificationCard({required this.notification});
 
@@ -64,12 +81,12 @@ class _NotificationCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: notification['color'].withValues(alpha: 0.1),
+              color: notification.color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
-              notification['icon'],
-              color: notification['color'],
+              notification.icon,
+              color: notification.color,
               size: 20,
             ),
           ),
@@ -82,14 +99,14 @@ class _NotificationCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      notification['title'],
+                      notification.title,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      notification['time'],
+                      _formatTime(notification.timestamp),
                       style: TextStyle(
                         color: Colors.grey[400],
                         fontSize: 12,
@@ -99,7 +116,7 @@ class _NotificationCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  notification['description'],
+                  notification.description,
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14,
@@ -113,35 +130,19 @@ class _NotificationCard extends StatelessWidget {
       ),
     );
   }
-}
 
-final _mockNotifications = [
-  {
-    'title': 'New Sale',
-    'description': 'Lotion Smooth (2 units) sold to Abebe Kebede.',
-    'time': '2m ago',
-    'icon': Icons.shopping_bag_outlined,
-    'color': Colors.blue,
-  },
-  {
-    'title': 'Credit Reminder',
-    'description': 'Payment from Martha is due tomorrow.',
-    'time': '1h ago',
-    'icon': Icons.notifications_active_outlined,
-    'color': Colors.orange,
-  },
-  {
-    'title': 'Low Stock Alert',
-    'description': 'Pasta is running low (only 5kg left).',
-    'time': '3h ago',
-    'icon': Icons.warning_amber_rounded,
-    'color': Colors.red,
-  },
-  {
-    'title': 'Payment Received',
-    'description': 'Credit for Enat Ekub has been marked as paid.',
-    'time': 'Yesterday',
-    'icon': Icons.check_circle_outline,
-    'color': Colors.green,
-  },
-];
+  String _formatTime(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d ago';
+    } else {
+      return DateFormat('MMM dd').format(timestamp);
+    }
+  }
+}
