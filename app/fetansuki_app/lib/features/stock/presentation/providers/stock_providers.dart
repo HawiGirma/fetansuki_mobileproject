@@ -6,6 +6,7 @@ import 'package:fetansuki_app/features/stock/data/repositories/stock_repository_
 import 'package:fetansuki_app/features/stock/domain/entities/stock_data.dart';
 import 'package:fetansuki_app/features/stock/domain/repositories/stock_repository.dart';
 import 'package:fetansuki_app/features/stock/presentation/providers/stock_creation_notifier.dart';
+import 'package:fetansuki_app/features/notifications/data/repositories/notification_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -54,6 +55,7 @@ final stockDataProvider = FutureProvider<StockData>((ref) async {
 // Stock Creation Provider
 final stockCreationProvider = StateNotifierProvider<StockCreationNotifier, StockCreationState>((ref) {
   final repository = ref.watch(stockRepositoryProvider);
-  return StockCreationNotifier(repository);
+  final notificationRepository = ref.watch(notificationRepositoryProvider);
+  return StockCreationNotifier(repository, notificationRepository);
 });
 
